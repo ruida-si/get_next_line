@@ -35,6 +35,7 @@ char	*readfile(int fd, char *buffer, char *line)
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
+	free(buffer);
 	return (line);
 }
 
@@ -43,17 +44,12 @@ char	*next_call(char *line)
 	char	*temp;
 	char	*backup;
 
-	if (ft_strchr(line, '\n'))
+	temp = ft_strchr(line, '\n');
+	if (temp && *(temp +1))
 	{
-		temp = ft_strchr(line, '\n');
-		if (*(temp + 1))
-		{
-			backup = ft_strdup(temp +1);
-			*(temp +1) = '\0';
-			return (backup);
-		}
-		else
-			return (NULL);
+		backup = ft_strdup(temp +1);
+		*(temp +1) = '\0';
+		return (backup);		
 	}
 	else
 		return (NULL);
@@ -71,7 +67,6 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 	line = readfile(fd, buffer, backup);
-	free(buffer);
 	if (!line)
 		return (NULL);
 	backup = next_call(line);
