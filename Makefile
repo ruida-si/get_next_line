@@ -14,7 +14,7 @@ CC = cc
 
 FLAGS = -Wall -Wextra -Werror
 
-SRC = get_next_line.c get_next_line_utils.c
+SRC = get_next_line_bonus.c get_next_line_utils_bonus.c
 
 ap:
 	$(CC) $(FLAGS) $(SRC)
