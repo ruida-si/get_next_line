@@ -60,12 +60,13 @@ char	*ft_strjoin(const char *s1, const char *s2)
 
 char	*ft_strchr(char *s, char c)
 {
-	if (c == '\0')
-		return (s + ft_strlen(s));
+	if (!s)
+		return (NULL);
 	while (*s)
 	{
-		if (*s++ == c)
-			return (--s);
+		if (*s == c)
+			return (s);
+		s++;
 	}
 	return (NULL);
 }

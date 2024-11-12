@@ -12,47 +12,72 @@
 
 #include "get_next_line.h"
 
+char	*readfile(int fd, char *buffer, char *line)
+{
+	int		b_read;
+	char	*temp;
+
+	b_read = 1;
+	while (b_read)
+	{
+		b_read = read(fd, buffer, BUFFER_SIZE);
+		if (b_read <= 0)
+			break ;
+		buffer[b_read] = '\0';
+		if (!line)
+			line = ft_strdup("");
+		temp = line;
+		line = ft_strjoin(line, buffer);
+		if (!line)
+			return (NULL);
+		free(temp);
+		temp = NULL;
+		if (ft_strchr(buffer, '\n'))
+			break ;
+	}
+	return (line);
+}
+
+char	*next_call(char *line)
+{
+	char	*temp;
+	char	*backup;
+
+	if (ft_strchr(line, '\n'))
+	{
+		temp = ft_strchr(line, '\n');
+		if (*(temp + 1))
+		{
+			backup = ft_strdup(temp +1);
+			*(temp +1) = '\0';
+			return (backup);
+		}
+		else
+			return (NULL);
+	}
+	else
+		return (NULL);
+}
+
 char	*get_next_line(int fd)
 {
 	char		*buffer;
 	char		*line;
-	int			b_read;
 	static char	*backup;
-	char		*temp;
 
-	b_read = 1;
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	if (backup)
-		line = ft_strdup(backup);
-	else
-		line = ft_strdup("");
-	free(backup);
-	backup = NULL;
-	while (b_read)
-	{
-		b_read = read(fd, buffer, BUFFER_SIZE);
-		if (!b_read)
-			break ;
-		buffer[b_read] = '\0';
-		temp = line;
-		line = ft_strjoin(line, buffer);
-		free(temp);
-		if (ft_strchr(line, '\n'))
-		{
-			temp = ft_strchr(line, '\n');
-			backup = ft_strdup(temp + 1);
-			*(++temp) = '\0';
-			break ;
-		}
-	}
+	line = readfile(fd, buffer, backup);
 	free(buffer);
+	if (!line)
+		return (NULL);
+	backup = next_call(line);
 	return (line);
 }
-
+/*
 int main()
 {
 	int fd = open("test", O_RDWR | O_CREAT, 0644);
@@ -63,3 +88,4 @@ int main()
 	printf(".%s.", s);
 	free(s);
 }
+*/
